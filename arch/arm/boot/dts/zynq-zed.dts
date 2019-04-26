@@ -23,8 +23,11 @@
 	};
 
 	chosen {
-		bootargs = "";
+		bootargs = "console=ttyPS0,115200 root=/dev/nfs rw rootfstype=nfs nfsroot=192.168.42.1:/home/christian/reconos/nfs,tcp,nfsvers=3 ip=192.168.42.2:::255.255.255.0:reconos:eth0:off earlyprintk";
+		//bootargs = "console=ttyPS0,115200 root=/dev/ram ip=192.168.42.2:::255.255.255.0:reconos:eth0:off earlyprintk";
 		stdout-path = "serial0:115200n8";
+		//initrd-start = <1EA25000>;
+		//initrd-end = <1EB20952>;
 	};
 
 	usb_phy0: phy0@e0002000 {
@@ -34,6 +37,26 @@
 		view-port = <0x0170>;
 		drv-vbus;
 	};
+        amba: amba {
+               reconos_osif: reconos_osif@75a00000 {
+                       compatible = "upb,reconos-osif-3.1";
+                       reg = <0x75a00000 0x10000>;
+               };
+
+               reconos_osif_intc: reconos_osif_intc@7b400000 {
+                       compatible = "upb,reconos-osif-intc-3.1";
+                       reg = <0x7b400000 0x10000>;
+                       interrup-parent = <&intc>;
+                       interrupts = <0 58 4>;
+               };
+
+               reconos_proc_control: reconos_proc_control@6fe00000 {
+                       compatible = "upb,reconos-control-3.1";
+                       reg = <0x6fe00000 0x10000>;
+                       interrupt-parent = <&intc>;
+                       interrupts = <0 59 4>;
+               };
+       };
 };
 
 &clkc {
